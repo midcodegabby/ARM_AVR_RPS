@@ -1,4 +1,8 @@
 .cproject
 .project
 .settings/
+Debug/
+RPS.launch
+Release/
+STM32L476RGTX_FLASH2.ld
 

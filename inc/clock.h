@@ -9,5 +9,7 @@
 #define CLOCK_H
 
 //define a bunch of functions:
-void clk_for_sysclk(uint32_t clk_f);
-void clk_for_peripherals();
+void sysclk_init();
+//void peripheral_clk_init();
+
+#endif
