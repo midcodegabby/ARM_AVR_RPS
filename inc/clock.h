@@ -10,6 +10,6 @@
 
 //define a bunch of functions:
 void sysclk_init();
-//void peripheral_clk_init();
+void peripheral_clk_init();
 
 #endif

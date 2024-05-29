@@ -26,16 +26,33 @@ void sysclk_init() {
 	//set MSI range to 32MHz
 	RCC_CR |= 0xA0;
 
-	//MSI EN
+	//MSI EN set
 	RCC_CR |= 1;
 
-	//wait for MSI to be ready; this waits for RCC_CR
-	while (RCC_CR & 0x2);
+	//wait for MSI to be ready; this waits for RCC_CR's 2nd bit to be set (indicating that MSI clk is stable
+	while (!(RCC_CR & 2));
 
+	//set sysclk to be MSI clk
+	RCC_CFGR &= 0;
+}
+
+void peripheral_clk_init() {
+	//this function initializes the peripherals to have clocks
+
+	//enable clk for peripherals (GPIO Port A)
+	RCC_AHB2ENR |= 1;
+
+	//enable clk for UART4
+	RCC_APB1ENR1 |= 1 << 19;
+
+	//select sysclk for UART4
+	RCC_CCIPR |= 1 << 6;
+	RCC_CCIPR |= 0 << 7;
 
 }
 
-int main() {
-	sysclk_init();
-	return 0;
+
+
+
+
 }
