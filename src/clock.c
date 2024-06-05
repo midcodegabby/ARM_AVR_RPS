@@ -17,6 +17,7 @@
 //this method directly dereferences the memory itself to access the registers
 #define RCC_CR (*((volatile uint32_t *) RCC)) 	//sysclk config
 #define RCC_CFGR (*((volatile uint32_t *) RCC + 0x08))	//clk config
+#define RCC_AHB1ENR (*((volatile uint32_t *) RCC + 0x48))	//clk enable for peripherals
 #define RCC_AHB2ENR (*((volatile uint32_t *) RCC + 0x4C))	//clk enable for peripherals
 #define RCC_CCIPR (*((volatile uint32_t *) RCC + 0x88))		//clk config for peripherals
 
@@ -27,7 +28,6 @@ void sysclk_init() {
 	RCC_CR |= (0xA << 4); //set 7th and 5th bit
 	RCC_CR &= (0x5 << 4); //clear 6th and 4th bit
 
-
 	//MSI EN set
 	RCC_CR |= (1);
 
@@ -36,7 +36,6 @@ void sysclk_init() {
 
 	//set sysclk to be MSI clk
 	RCC_CFGR &= ~(0x3); //clear the first two bits
-
 }
 
 
@@ -47,7 +46,7 @@ void peripheral_clk_init() {
 	RCC_AHB2ENR |= (1);
 
 	//enable clk for UART4
-	RCC_APB1ENR1 |= (1 << 19);
+	RCC_AHB1ENR |= (1 << 19);
 
 	//select sysclk for UART4
 	RCC_CCIPR |= (1 << 6);
