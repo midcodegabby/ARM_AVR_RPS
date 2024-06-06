@@ -19,9 +19,10 @@
 #define RCC_CFGR (*((volatile uint32_t *) RCC + 0x08))	//clk config
 #define RCC_AHB1ENR (*((volatile uint32_t *) RCC + 0x48))	//clk enable for peripherals
 #define RCC_AHB2ENR (*((volatile uint32_t *) RCC + 0x4C))	//clk enable for peripherals
+#define RCC_APB1ENR1 (*((volatile uint32_t *) RCC + 0x58))	//clk enable for peripherals
 #define RCC_CCIPR (*((volatile uint32_t *) RCC + 0x88))		//clk config for peripherals
 
-void sysclk_init() {
+void sysclk_init(void) {
 	//This function initializes the sysclk to work at 32 MHz, using the MSI clk
 
 	//set MSI range to 32MHz
@@ -39,14 +40,17 @@ void sysclk_init() {
 }
 
 
-void peripheral_clk_init() {
+void peripheral_clk_init(void) {
 	//this function initializes the peripherals to have clocks
 
 	//enable clk for peripherals (GPIO Port A)
-	RCC_AHB2ENR |= (1);
+	RCC_AHB2ENR |= (1 << 0);
+
+	//enable clk for peripherals (GPIO Port C)
+	RCC_AHB2ENR |= (1 << 2);
 
 	//enable clk for UART4
-	RCC_AHB1ENR |= (1 << 19);
+	RCC_APB1ENR1 |= (1 << 19);
 
 	//select sysclk for UART4
 	RCC_CCIPR |= (1 << 6);

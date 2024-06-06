@@ -12,14 +12,21 @@
 
 //definitions and register mapping
 #define GPIOA 0x48000000
+#define GPIOC 0x48000800
 
 #define GPIOA_MODER (*((volatile uint32_t *) GPIOA))
 #define GPIOA_OTYPER (*((volatile uint32_t *) GPIOA + 0x04))
 #define GPIOA_OSPEEDR (*((volatile uint32_t *) GPIOA + 0x08))
 #define GPIOA_PUPDR (*((volatile uint32_t *) GPIOA + 0x0C))
+#define GPIOA_ODR (*((volatile uint32_t *) GPIOA + 0x14))
+#define GPIOA_BSRR (*((volatile uint32_t *) GPIOA + 0x18))
 #define GPIOA_AFRL (*((volatile uint32_t *) GPIOA + 0x20))
 
-void gpio_uart_init() {
+#define GPIOC_MODER (*((volatile uint32_t *) GPIOC))
+#define GPIOC_PUPDR (*((volatile uint32_t *) GPIOC + 0x0C))
+#define GPIOC_IDR (*((volatile uint32_t *) GPIOC + 0x10))
+
+void gpio_uart_init(void) {
 	//this function initializes the gpio port to be a uart port
 
 	//set GPIOA pin 0 and 1 to be alt. func. (UART)
@@ -42,3 +49,33 @@ void gpio_uart_init() {
 	GPIOA_AFRL &= ~(0x77); //clear bits 6-4 and 2-0
 
 }
+
+void gpio_button_init(void) {
+
+	//set button pin (B1, connected to PC13) to be general purpose input mode
+	GPIOC_MODER &= ~(0x3 << 26);
+
+	//set input to pull up R
+	GPIOC_PUPDR &= ~(0x3 << 26);
+	GPIOC_PUPDR |= (1 << 26);
+
+}
+
+void gpio_led_init(void) {
+
+	//set LED pin (GPIOA pin 5) to be general purpose output mode
+	GPIOA_MODER |= (1 << 10);
+	GPIOA_MODER &= ~(1 << 11);
+
+	GPIOA_OTYPER &= ~(1 << 5); // set PA5 to be push-pull
+
+	//set LED pin to be Z (floating) so that led stays on
+	GPIOA_PUPDR &= ~(1 << 11);
+	GPIOA_PUPDR &= ~(1 << 10);
+
+	//GPIOA_ODR |= (1 << 5); // set led ON
+	GPIOA_BSRR |= (1 << 5);
+}
+
+
+
