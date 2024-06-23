@@ -3,7 +3,7 @@
  *
  *  Created on: May 29, 2024
  *  Author: Gabriel Rodgers
- *  Purpose: configure GPIO Port to be UART port
+ *  Purpose: configure GPIO Port to be UART port and turn on LED2
  */
 
 //include files
