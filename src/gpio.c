@@ -7,8 +7,8 @@
  */
 
 //include files
-#include "gpio.h"
 #include <stdint.h>
+#include "gpio.h"
 
 //definitions and register mapping
 #define GPIOA 0x48000000
@@ -25,7 +25,7 @@
 #define GPIOC_MODER (*((volatile uint32_t *) GPIOC))
 #define GPIOC_PUPDR (*((volatile uint32_t *) GPIOC + 0x0C))
 #define GPIOC_IDR (*((volatile uint32_t *) GPIOC + 0x10))
-
+/*
 void gpio_uart_init(void) {
 	//this function initializes the gpio port to be a uart port
 
@@ -60,7 +60,7 @@ void gpio_button_init(void) {
 	GPIOC_PUPDR |= (1 << 26);
 
 }
-
+*/
 void gpio_led_init(void) {
 
 	//set LED pin (GPIOA pin 5) to be general purpose output mode
