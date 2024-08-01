@@ -3,7 +3,7 @@
 CC=arm-none-eabi-gcc
 MACH=cortex-m4
 CFLAGS=-c -mcpu=$(MACH) -mthumb --std=gnu11 -Wall -o0
-LDFLAGS=-nostdlib -T stm32_ls.ld -Wl,-Map=final.map #-Wl specifies a linker input
+LDFLAGS=-nostdlib -T stm32_ls.ld -Wl,-Map=final.map #-Wl specifies a linker input, no stdlib
 
 all: main.o gpio.o stm32_startup.o final.elf
 
