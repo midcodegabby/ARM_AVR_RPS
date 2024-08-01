@@ -20,7 +20,10 @@ final.elf: main.o gpio.o stm32_startup.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 clean:
-	rm -rf *.o *.elf
+	rm -rf *.o *.elf *.map
+
+load:
+	openocd -f board/st_nucleo_l4.cfg
 
 # -Wall: show all warnings
 #  clean: function description deletes all .o and .elf files

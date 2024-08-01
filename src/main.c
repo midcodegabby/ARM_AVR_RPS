@@ -8,7 +8,6 @@
 
 #define GPIOA_ODR (*((volatile uint32_t *) GPIOA + 0x14))
 #define GPIOC_IDR (*((volatile uint32_t *) GPIOC + 0x10))
-const uint32_t const1 = 100;
 int main(void) {
 
 	//initialize all of the stuff
