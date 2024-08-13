@@ -15,16 +15,19 @@
 #define GPIOC 0x48000800
 
 #define GPIOA_MODER (*((volatile uint32_t *) GPIOA))
-#define GPIOA_OTYPER (*((volatile uint32_t *) GPIOA + 0x04))
-#define GPIOA_OSPEEDR (*((volatile uint32_t *) GPIOA + 0x08))
-#define GPIOA_PUPDR (*((volatile uint32_t *) GPIOA + 0x0C))
-#define GPIOA_ODR (*((volatile uint32_t *) GPIOA + 0x14))
-#define GPIOA_BSRR (*((volatile uint32_t *) GPIOA + 0x18))
-#define GPIOA_AFRL (*((volatile uint32_t *) GPIOA + 0x20))
+#define GPIOA_OTYPER (*((volatile uint32_t *) (GPIOA + 0x04)))
+#define GPIOA_OSPEEDR (*((volatile uint32_t *) (GPIOA + 0x08)))
+#define GPIOA_PUPDR (*((volatile uint32_t *) (GPIOA + 0x0C)))
+#define GPIOA_ODR (*((volatile uint32_t *) (GPIOA + 0x14)))
+#define GPIOA_BSRR (*((volatile uint32_t *) (GPIOA + 0x18)))
+#define GPIOA_AFRL (*((volatile uint32_t *) (GPIOA + 0x20)))
 
 #define GPIOC_MODER (*((volatile uint32_t *) GPIOC))
-#define GPIOC_PUPDR (*((volatile uint32_t *) GPIOC + 0x0C))
-#define GPIOC_IDR (*((volatile uint32_t *) GPIOC + 0x10))
+#define GPIOC_PUPDR (*((volatile uint32_t *) (GPIOC + 0x0C)))
+#define GPIOC_IDR (*((volatile uint32_t *) (GPIOC + 0x10)))
+
+#define RCC_AHB2ENR (*((volatile uint32_t *) (0x40021000 + 0x4C)))
+
 /*
 void gpio_uart_init(void) {
 	//this function initializes the gpio port to be a uart port
@@ -49,7 +52,7 @@ void gpio_uart_init(void) {
 	GPIOA_AFRL &= ~(0x77); //clear bits 6-4 and 2-0
 
 }
-
+*/
 void gpio_button_init(void) {
 
 	//set button pin (B1, connected to PC13) to be general purpose input mode
@@ -60,7 +63,7 @@ void gpio_button_init(void) {
 	GPIOC_PUPDR |= (1 << 26);
 
 }
-*/
+
 void gpio_led_init(void) {
 
 	//set LED pin (GPIOA pin 5) to be general purpose output mode
@@ -68,14 +71,22 @@ void gpio_led_init(void) {
 	GPIOA_MODER &= ~(1 << 11);
 
 	GPIOA_OTYPER &= ~(1 << 5); // set PA5 to be push-pull
-
-	//set LED pin to be Z (floating) so that led stays on
-	GPIOA_PUPDR &= ~(1 << 11);
-	GPIOA_PUPDR &= ~(1 << 10);
-
-	//GPIOA_ODR |= (1 << 5); // set led ON
-	GPIOA_BSRR |= (1 << 5);
 }
 
+void gpio_led_on(void) {
+	
+	//turn the led on
+	GPIOA_BSRR |= (1 << 5); 
+}
 
+void gpio_led_off(void) {
+	
+	//turn the led off
+	GPIOA_ODR &= ~(1 << 5); 
+}
+
+void gpio_led_toggle(void) {
+
+	GPIOA_ODR ^= (1 << 5); 
+}
 

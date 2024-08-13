@@ -6,16 +6,19 @@
 //headers and macros
 #include <stdint.h>
 
-#define SRAM_START 0x20000000
-#define SRAM_SIZE (128*1024) //128 KB, SRAM1 = 96 KB, SRAM2 = 32 KB
+#define SRAM_START 0x20000000U
+#define SRAM_SIZE (96U*1024U) //96 KB, SRAM1 = 96 KB, SRAM2 = 32 KB (should be 128 KB)
 #define SRAM_END (SRAM_START + SRAM_SIZE)
 
-#define STACK_START (SRAM_END)
+#define STACK_START SRAM_END
 
 //use extern uint32_t to access symbols from linker script!
 extern uint32_t _etext;
 extern uint32_t _sdata;
 extern uint32_t _edata;
+extern uint32_t _la_data;
+
+extern uint32_t _estack; 
 
 extern uint32_t _sbss;
 extern uint32_t _ebss;
@@ -113,6 +116,7 @@ void SAI2_IRQHandler			(void) __attribute__ ((weak, alias("Default_Handler")));
 void SWPMI1_IRQHandler			(void) __attribute__ ((weak, alias("Default_Handler")));
 void TSC_IRQHandler			(void) __attribute__ ((weak, alias("Default_Handler")));
 void LCD_IRQHandler			(void) __attribute__ ((weak, alias("Default_Handler")));
+void RNG_IRQHandler              	(void) __attribute__ ((weak, alias("Default_Handler")));                          
 void FPU_IRQHandler              	(void) __attribute__ ((weak, alias("Default_Handler")));                          
 
 //vector table: starts at 0x0000 0000, ends at 0x0000 01A8
@@ -122,7 +126,6 @@ void FPU_IRQHandler              	(void) __attribute__ ((weak, alias("Default_Ha
 //in a new section called .isr_vector
 uint32_t vectors[] __attribute__((section(".isr_vector"))) = {
 	STACK_START,
-	0,
 	(uint32_t) Reset_Handler,  //must typecast this
 	(uint32_t) NMI_Handler, //address of default_handler is stored here
 	(uint32_t) HardFault_Handler, 		
@@ -131,6 +134,7 @@ uint32_t vectors[] __attribute__((section(".isr_vector"))) = {
 	(uint32_t) UsageFault_Handler, 	
 	0,
 	0, 
+	0,
 	0,
 	(uint32_t) SVC_Handler,		
 	(uint32_t) DebugMon_Handler,
@@ -218,9 +222,8 @@ uint32_t vectors[] __attribute__((section(".isr_vector"))) = {
 	(uint32_t) TSC_IRQHandler,
 	(uint32_t) LCD_IRQHandler,
 	0,
-	0,
+	(uint32_t) RNG_IRQHandler,
 	(uint32_t) FPU_IRQHandler,
-	0,
 	
 }; //can also put __attribute__ stuff at the end of a definition/declaration
 
@@ -234,6 +237,9 @@ void Default_Handler(void){
 
 //this initializes the .data and .bss section
 void Reset_Handler(void){
+	
+	//initialize the stack pointer using inline asm
+	__asm__ ("ldr sp, =_estack");
 
 	//copy .data section to SRAM
 	//first find the size of the .data section, must typecast addresses corresponding to the symbols
@@ -242,7 +248,7 @@ void Reset_Handler(void){
 	//pDst is a pointer to the destination of the data section (in SRAM)
 	uint8_t *pDst = (uint8_t*)&_sdata;
 	
-	//pSrc is a pointer to the souurce of the data section (in FLASH)
+	//pSrc is a pointer to the source of the data section (in FLASH)
 	uint8_t *pSrc = (uint8_t*)&_edata;
 
 	for(uint32_t i=0; i < size; i++){

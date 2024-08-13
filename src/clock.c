@@ -15,12 +15,12 @@
 
 //define the first register in the RCC memory section
 //this method directly dereferences the memory itself to access the registers
-#define RCC_CR (*((volatile uint32_t *) RCC)) 	//sysclk config
-#define RCC_CFGR (*((volatile uint32_t *) RCC + 0x08))	//clk config
-#define RCC_AHB1ENR (*((volatile uint32_t *) RCC + 0x48))	//clk enable for peripherals
-#define RCC_AHB2ENR (*((volatile uint32_t *) RCC + 0x4C))	//clk enable for peripherals
-#define RCC_APB1ENR1 (*((volatile uint32_t *) RCC + 0x58))	//clk enable for peripherals
-#define RCC_CCIPR (*((volatile uint32_t *) RCC + 0x88))		//clk config for peripherals
+#define RCC_CR (*((volatile uint32_t *) (RCC))) 	//sysclk config
+#define RCC_CFGR (*((volatile uint32_t *) (RCC + 0x08)))	//clk config
+#define RCC_AHB1ENR (*((volatile uint32_t *) (RCC + 0x48)))	//clk enable for peripherals
+#define RCC_AHB2ENR (*((volatile uint32_t *) (RCC + 0x4C)))	//clk enable for peripherals
+#define RCC_APB1ENR1 (*((volatile uint32_t *) (RCC + 0x58)))	//clk enable for peripherals
+#define RCC_CCIPR (*((volatile uint32_t *) (RCC + 0x88)))		//clk config for peripherals
 
 void sysclk_init(void) {
 	//This function initializes the sysclk to work at 32 MHz, using the MSI clk
@@ -50,12 +50,13 @@ void peripheral_clk_init(void) {
 	RCC_AHB2ENR |= (1 << 2);
 
 	//enable clk for UART4
-	RCC_APB1ENR1 |= (1 << 19);
+	//RCC_APB1ENR1 |= (1 << 19);
 
 	//select sysclk for UART4
-	RCC_CCIPR |= (1 << 6);
-	RCC_CCIPR &= ~(1 << 7);
+	//RCC_CCIPR |= (1 << 6);
+	//RCC_CCIPR &= ~(1 << 7);
 
+	for (uint32_t i = 0; i<2; i++);
 }
 
 

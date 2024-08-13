@@ -1,5 +1,12 @@
 ENTRY(Reset_Handler)
 
+/*define the stack end/bottom, which is just the end of SRAM1*/
+_estack = 0x20018000;
+
+/*define min size for the heap and the stack*/
+_Min_Heap_Size = 0x400;
+_Min_Stack_Size = 0x200;
+
 MEMORY
 {
 	FLASH (rx):ORIGIN = 0x08000000, LENGTH = 1024K
@@ -10,42 +17,74 @@ MEMORY
 SECTIONS
 {
 	/*The following sections are created in the following order*/
-	/*This section should include .text section of all input files*/
+	/*put the vector table at the start of the flash, right here*/
+	.isr_vector :
+	{
+		. = ALIGN(4);
+		KEEP(*(.isr_vector))
+		. = ALIGN(4);
+	} > FLASH
+
+
+	/*This section should include .text section (which is the main program code) of all input files*/
 	.text : 
 	{
-		/*At this point in the ls the location symbol (.) is the same as VMA which is FLASH (0x0800 0000)*/
 		/*The * char says to merge .text section of all input files*/
-		*(.isr_vector)
+		. = ALIGN(4);
 		*(.text)
-		*(.rodata)
+		*(.text*)
 		. = ALIGN(4);
 		_etext = .; /*Store the updated location counter value in to a symbol called _etext, note that
 			     the location counter only tracks the VMA, not the LMA!!!*/
 
-	} > FLASH 
+	}> FLASH 
 	/*This part shows where to put the section in memory*/
 	/* syntax: > vma AT> lma, for this case no need for second part due to vma = lma
 	/* vma = virtual memory address, lma = load memory address*/
+	
+	/*This section contains read-only data*/
+	.rodata : 
+	{
+		. = ALIGN(4);
+		*(.rodata)
+		*(.rodata*)
+		. = ALIGN(4);
+	}> FLASH
 
-	/*This section should include .data section of all input files*/
+	/*This section should include .data (read/write data) section of all input files*/
 	.data : 
 	{
-		_sdata = .;
-		*(.data)
 		. = ALIGN(4);
-		_edata = .;
+		_sdata = .; /*start of data section*/
+		*(.data)
+		*(.data*)
+		_edata = .; /*end of data section*/
+		. = ALIGN(4);
 
-	} > SRAM1 AT> FLASH 
+	/*}> SRAM1 AT> FLASH*/
+	}> SRAM1 
 	/* this section is loaded into the flash right after the .text section, but it is within the SRAM*/
 
 	/*This section should include .bss section of all input files*/
 	.bss : 
 	{
+		. = ALIGN(4);
 		_sbss = .;
 		*(.bss)
+		*(.bss*)
 		*(COMMON)
 		. = ALIGN(4);
 		_ebss = .;
 	
-	} > SRAM1
+	}> SRAM1
+
+	.dynamic_allocations : 
+	{
+		. = ALIGN(4);
+		_ssystem_ram = .;
+		. = . + _Min_Stack_Size;
+		. = ALIGN(4);
+		_esystem_ram = .;
+	}> SRAM1
+
 }

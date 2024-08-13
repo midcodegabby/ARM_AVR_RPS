@@ -1,36 +1,33 @@
 #include <stdint.h>
 
-//#include "clock.h"
+#include "clock.h"
 #include "gpio.h"
 
-#define GPIOA 0x48000000
-#define GPIOC 0x48000800
-
-#define GPIOA_ODR (*((volatile uint32_t *) GPIOA + 0x14))
-#define GPIOC_IDR (*((volatile uint32_t *) GPIOC + 0x10))
 int main(void) {
 
 	//initialize all of the stuff
 	//sysclk_init();
-	//peripheral_clk_init();
-	//gpio_button_init();
+	peripheral_clk_init();
+	gpio_button_init();
 	gpio_led_init();
+
+	//turn on the led
+	gpio_led_on();
 
 	//uint32_t idr_contents;
 
 	//infinite loop checking if the button has been pressed
-	
-	while (1){
-		//read the value of the IDR register
-		//right shift GPIOC_IDR by 13, negate it, then & with one
-		//idr_contents = (~(GPIOC_IDR >> 13) & 1);
+	uint32_t i = 0;
 
-		//toggle LED: first mask the other bits of idr_contents
-		//if (idr_contents & (1 << 0)){
-		//	GPIOA_ODR ^= (1 << 5);
-		//}
+
+	while (1){
+
+		if (i == 100000) {
+			gpio_led_toggle();
+			i = 0;
+		}
+		i++; 
 	}
-	
 
 	return 0;
 }

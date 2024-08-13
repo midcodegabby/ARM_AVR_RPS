@@ -2,10 +2,10 @@
 # [make func_name] --> e.g., make clean
 CC=arm-none-eabi-gcc
 MACH=cortex-m4
-CFLAGS=-c -mcpu=$(MACH) -mthumb --std=gnu11 -Wall -o0
+CFLAGS=-c -mcpu=$(MACH) -mthumb --std=gnu11 -Wall -o0 -g3
 LDFLAGS=-nostdlib -T stm32_ls.ld -Wl,-Map=final.map #-Wl specifies a linker input
 
-all: main.o gpio.o stm32_startup.o final.elf
+all: main.o gpio.o clock.o stm32_startup.o final.elf
 
 main.o:main.c
 	$(CC) $(CFLAGS) -o $@ $^
@@ -13,10 +13,13 @@ main.o:main.c
 gpio.o:gpio.c
 	$(CC) $(CFLAGS) -o $@ $^
 
+clock.o:clock.c
+	$(CC) $(CFLAGS) -o $@ $^
+
 stm32_startup.o:stm32_startup.c
 	$(CC) $(CFLAGS) -o $@ $^
 
-final.elf: main.o gpio.o stm32_startup.o
+final.elf: main.o gpio.o clock.o stm32_startup.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 clean:
@@ -24,6 +27,9 @@ clean:
 
 load:
 	openocd -f board/st_nucleo_l4.cfg
+
+client:
+	arm-none-eabi-gdb
 
 # -Wall: show all warnings
 #  clean: function description deletes all .o and .elf files
