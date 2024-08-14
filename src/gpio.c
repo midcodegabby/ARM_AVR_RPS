@@ -58,10 +58,22 @@ void gpio_button_init(void) {
 	//set button pin (B1, connected to PC13) to be general purpose input mode
 	GPIOC_MODER &= ~(0x3 << 26);
 
-	//set input to pull up R
+	//set input to pull down R
 	GPIOC_PUPDR &= ~(0x3 << 26);
-	GPIOC_PUPDR |= (1 << 26);
+	GPIOC_PUPDR |= (1 << 27);
 
+}
+
+uint8_t gpio_button_poll(uint8_t button) {
+
+	//check input data register and assign it to the button parameter
+	button = ((GPIOC_IDR >> 13) & 1);
+
+	//if:
+	//button == 1, then button has not been pushed
+	//button == 0, then button has been pushed
+	
+	return button;
 }
 
 void gpio_led_init(void) {

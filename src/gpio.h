@@ -10,6 +10,7 @@
 
 //void gpio_uart_init(void);
 void gpio_button_init(void);
+uint8_t gpio_button_poll(uint8_t);
 void gpio_led_init(void);
 void gpio_led_on(void);
 void gpio_led_off(void);
