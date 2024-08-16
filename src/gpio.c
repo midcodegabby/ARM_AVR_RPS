@@ -58,9 +58,9 @@ void gpio_button_init(void) {
 	//set button pin (B1, connected to PC13) to be general purpose input mode
 	GPIOC_MODER &= ~(0x3 << 26);
 
-	//set input to pull down R
+	//set input to pull up R
 	GPIOC_PUPDR &= ~(0x3 << 26);
-	GPIOC_PUPDR |= (1 << 27);
+	GPIOC_PUPDR |= (1 << 26);
 
 }
 
