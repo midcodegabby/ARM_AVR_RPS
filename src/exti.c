@@ -7,6 +7,7 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 #include "exti.h"
 #include "nvic.h"
 #include "gpio.h"
@@ -45,6 +46,8 @@ void enable_exti(void) {
 void EXTI15_10_IRQHandler(void) {
 
         disable_nvic(); 
+
+	printf("You pressed the button!\n");
 
         for(uint32_t i = 0; i < 10; i++);
 

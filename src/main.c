@@ -7,11 +7,15 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 
 #include "clock.h"
 #include "gpio.h"
 #include "nvic.h"
 #include "exti.h"
+
+//semihosting init function:
+extern void initialize_monitor_handles(void);
 
 int main(void) {
 
@@ -24,8 +28,9 @@ int main(void) {
 	enable_nvic();
 	gpio_led_on();
 
+	printf("Before the while loop\n");
+
 	while (1){
-		//gpio_led_on();	
 	}
 
 	return 0;

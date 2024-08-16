@@ -28,6 +28,9 @@ extern uint32_t _ebss;
 //main() prototype
 int main(void); 
 
+//stdlib initialization function prototype
+void __libc_init_array(void);
+
 //isr declarations; weak allows later mods of NMI_handler function in .c source file
 void Reset_Handler(void);
 void NMI_Handler 			(void) __attribute__ ((weak, alias("Default_Handler"))); 
@@ -250,7 +253,7 @@ void Reset_Handler(void){
 	uint8_t *pDst = (uint8_t*)&_sdata;
 	
 	//pSrc is a pointer to the source of the data section (in FLASH)
-	uint8_t *pSrc = (uint8_t*)&_edata;
+	uint8_t *pSrc = (uint8_t*)&_la_data;
 
 	for(uint32_t i=0; i < size; i++){
 		*pDst++ = *pSrc++;
@@ -266,8 +269,9 @@ void Reset_Handler(void){
 		*pDst++ = 0;
 	}
 
-	//call initialization function of stdlib if needed (not needed for this program)
-	
+	//call initialization function of stdlib 
+	__libc_init_array();
+
 	//call main()
 	main();
 }
