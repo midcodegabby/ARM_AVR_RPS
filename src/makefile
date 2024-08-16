@@ -5,7 +5,7 @@ MACH=cortex-m4
 CFLAGS=-c -mcpu=$(MACH) -mthumb --std=gnu11 -Wall -o0 -g3
 LDFLAGS=-nostdlib -T stm32_ls.ld -Wl,-Map=final.map #-Wl specifies a linker input
 
-all: main.o gpio.o clock.o stm32_startup.o final.elf
+all: main.o gpio.o clock.o nvic.o exti.o stm32_startup.o final.elf
 
 main.o:main.c
 	$(CC) $(CFLAGS) -o $@ $^
@@ -16,10 +16,16 @@ gpio.o:gpio.c
 clock.o:clock.c
 	$(CC) $(CFLAGS) -o $@ $^
 
+nvic.o:nvic.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+exti.o:exti.c
+	$(CC) $(CFLAGS) -o $@ $^
+
 stm32_startup.o:stm32_startup.c
 	$(CC) $(CFLAGS) -o $@ $^
 
-final.elf: main.o gpio.o clock.o stm32_startup.o
+final.elf: main.o gpio.o clock.o nvic.o exti.o stm32_startup.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 clean:

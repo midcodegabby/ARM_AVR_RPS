@@ -11,6 +11,8 @@
 #define SRAM_END (SRAM_START + SRAM_SIZE)
 
 #define STACK_START SRAM_END
+#define GPIOA_ODR (*((volatile uint32_t *) (0x48000014)))
+
 
 //use extern uint32_t to access symbols from linker script!
 extern uint32_t _etext;
@@ -152,7 +154,6 @@ uint32_t vectors[] __attribute__((section(".isr_vector"))) = {
 	(uint32_t) EXTI2_IRQHandler,
 	(uint32_t) EXTI3_IRQHandler,
 	(uint32_t) EXTI4_IRQHandler,
-	(uint32_t) DMA1_Stream0_IRQHandler,
 	(uint32_t) DMA1_Stream1_IRQHandler,
 	(uint32_t) DMA1_Stream2_IRQHandler,
 	(uint32_t) DMA1_Stream3_IRQHandler,
