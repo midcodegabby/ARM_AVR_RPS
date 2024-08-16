@@ -5,4 +5,7 @@ Debug/
 RPS.launch
 Release/
 .gitignore
+final.elf
+final.map
+
 
