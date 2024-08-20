@@ -13,6 +13,7 @@
 #include "gpio.h"
 #include "nvic.h"
 #include "exti.h"
+#include "systick.h"
 
 //semihosting init function:
 extern void initialize_monitor_handles(void);
@@ -21,6 +22,7 @@ int main(void) {
 
 	//initialize all of the stuff
 	//sysclk_init();
+	systick_init(10000);
 	peripheral_clk_init();
 	gpio_button_init();
 	gpio_led_init();
@@ -28,7 +30,7 @@ int main(void) {
 	enable_nvic();
 	gpio_led_on();
 
-	printf("Before the while loop\n");
+	//printf("Before the while loop\n");
 
 	while (1){
 	}

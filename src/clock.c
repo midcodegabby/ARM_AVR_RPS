@@ -23,6 +23,11 @@
 #define RCC_APB2ENR (*((volatile uint32_t *) (RCC + 0x60)))	//clk enable for peripherals
 #define RCC_CCIPR (*((volatile uint32_t *) (RCC + 0x88)))		//clk config for peripherals
 
+void wait(uint32_t ms, uint32_t mhz) {
+	uint32_t max = (mhz*ms*1000);
+	for (uint32_t idx = 0; idx < max; idx++);
+}
+
 void sysclk_init(void) {
 	//This function initializes the sysclk to work at 32 MHz, using the MSI clk
 

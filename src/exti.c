@@ -9,8 +9,10 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "exti.h"
+#include "clock.h"
 #include "nvic.h"
 #include "gpio.h"
+#include "systick.h"
 
 
 #define EXTI 0x40010400
@@ -44,28 +46,38 @@ void enable_exti(void) {
 
 //IRQ handler for button push interrupt
 void EXTI15_10_IRQHandler(void) {
-
+	
+	//disable interrupts
         disable_nvic(); 
 
-	printf("You pressed the button!\n");
+	enable_systick();
 
-        for(uint32_t i = 0; i < 10; i++);
-
-        gpio_led_toggle();
-
-        //clear any pending interrupts
+	//printf("You pressed the button!\n");
+	
+        /*for(uint32_t i = 0; i < 10; i++){
+	
+		wait(100, 4);
+		gpio_led_toggle();
+	}*/
+	
+        //clear any pending interrupts and re-enable interrupts
         EXTI_PR1 |= (1 << 13);
-
-
-        //disable interrupts and events for line 13
-        //EXTI_IMR1 &= ~(1 << 13);
-        //EXTI_EMR1 &= ~(1 << 13);
-
-
-        //enable interrupts and events for line 13
-        //EXTI_IMR1 |= (1 << 13);
-        //EXTI_EMR1 |= (1 << 13);
-
         enable_nvic();
 }
 
+//IRQ handler for systick interrupt
+void SysTick_Handler(void) {
+
+	//disable interrupts and systick
+	disable_nvic();
+	disable_systick();
+
+	gpio_led_toggle();
+
+	//clear any pending interrupts
+        EXTI_PR1 |= (1 << 13);
+
+	//enable interrupts
+        enable_nvic();
+
+}
