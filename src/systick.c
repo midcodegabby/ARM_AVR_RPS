@@ -17,9 +17,9 @@
 #define STK_LOAD (*((volatile uint32_t *) (STK + 0x04)))
 
 //define the clock speed defined in clock.h
-extern volatile uint32_t CLK;
+extern uint32_t SYS_CLK;
+extern uint32_t AHB_CLK;
 
-//this will be a variable that stores the time in ms
 volatile uint32_t time_ms = 0;
 
 //initialize systick
@@ -32,7 +32,7 @@ void systick_init(void) {
 	STK_CTRL |= (1<<1);
 
 	//find the amount of pulses required to reach 1 ms; where 4 is the clock frequency in MHz. 
-	uint32_t pulses = (1*CLK*1000);
+	uint32_t pulses = (1*AHB_CLK*1000);
 
 	//load the pulses var into the load register
 	STK_LOAD &= 0; 
@@ -52,15 +52,13 @@ void disable_systick(void) {
 //IRQ handler for systick interrupt
 void SysTick_Handler(void) {
 
-        //disable interrupts and systick
+        //disable interrupts
         disable_nvic();
-        //disable_systick();
 
         //gpio_led_toggle();
 	time_ms++; 	//increment the clock time
 
-        //enable interrupts and systick
-	//enable_systick();
+        //enable interrupts
         enable_nvic();
 }
 

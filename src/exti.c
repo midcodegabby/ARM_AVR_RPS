@@ -47,12 +47,13 @@ void enable_exti(void) {
 void EXTI15_10_IRQHandler(void) {
 	
 	//disable interrupts
-        //disable_nvic(); 
+        disable_nvic(); 
 
-	delay(1000);
+	delay(5000);	
 	gpio_led_toggle();
 
         //clear any pending interrupts and re-enable interrupts
-        //EXTI_PR1 |= (1 << 13);
-        //enable_nvic();
+        EXTI_PR1 |= (1 << 13);
+        enable_nvic();
 }
+

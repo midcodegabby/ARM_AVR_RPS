@@ -10,5 +10,6 @@
 
 void enable_nvic(void);
 void disable_nvic(void);
+void change_priority_nvic(void);
 
-#endif /* INC_NVIC_H_ */
+#endif 

@@ -25,31 +25,27 @@
 #define RCC_APB2ENR (*((volatile uint32_t *) (RCC + 0x60)))	//clk enable for peripherals
 #define RCC_CCIPR (*((volatile uint32_t *) (RCC + 0x88)))		//clk config for peripherals
 									
-volatile uint32_t CLK = 4;
-volatile uint32_t RE_CLK = 4;
-extern volatile uint32_t time_ms;
+uint32_t SYS_CLK = 32;
+uint32_t AHB_CLK = 8;
 
+//delay a given amount of time using systick
 void delay(uint32_t ms) {
-	uint32_t start = time_ms; 
-
-	while ((start + ms) > time_ms); 
+	uint32_t start = get_time();
+	while ((start + ms) > get_time()); 
 }
 
 void sysclk_init(void) {
 	//This function initializes the sysclk to work at 32 MHz, using the MSI clk
 
-	//set MSI range to 32MHz
-	RCC_CR |= (0xA << 4); //set 7th and 5th bit
-	RCC_CR &= (0x5 << 4); //clear 6th and 4th bit
+	//select MSI range from RCC_CR register
+	RCC_CR |= (1 << 3);
+	
+	//set MSI range to 32 MHz
+	RCC_CR &= ~(0xF << 4);
+	RCC_CR |= (0xA << 4);
 
-	//MSI EN set
-	RCC_CR |= (1);
-
-	//wait for MSI to be ready; this waits for RCC_CR's 2nd bit to be set (indicating that MSI clk is stable
-	while (!(RCC_CR & 2));
-
-	//set sysclk to be MSI clk
-	RCC_CFGR &= ~(0x3); //clear the first two bits
+	//set AHB prescaler to be 4; this makes the AHB clock 8 MHz
+	RCC_CFGR |= (0x9 << 4);
 }
 
 
@@ -72,7 +68,7 @@ void peripheral_clk_init(void) {
 	//RCC_CCIPR |= (1 << 6);
 	//RCC_CCIPR &= ~(1 << 7);
 
-	for (uint32_t i = 0; i<2; i++);
+	delay(2);
 }
 
 

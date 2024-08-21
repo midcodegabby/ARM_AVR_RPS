@@ -11,4 +11,4 @@
 void enable_exti(void);
 void EXTI15_10_IRQHandler(void);
 
-#endif /* INC_EXTI_H_ */
+#endif 
