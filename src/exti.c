@@ -14,7 +14,6 @@
 #include "gpio.h"
 #include "systick.h"
 
-
 #define EXTI 0x40010400
 #define SYSCFG 0x40010000
 
@@ -48,36 +47,12 @@ void enable_exti(void) {
 void EXTI15_10_IRQHandler(void) {
 	
 	//disable interrupts
-        disable_nvic(); 
+        //disable_nvic(); 
 
-	enable_systick();
-
-	//printf("You pressed the button!\n");
-	
-        /*for(uint32_t i = 0; i < 10; i++){
-	
-		wait(100, 4);
-		gpio_led_toggle();
-	}*/
-	
-        //clear any pending interrupts and re-enable interrupts
-        EXTI_PR1 |= (1 << 13);
-        enable_nvic();
-}
-
-//IRQ handler for systick interrupt
-void SysTick_Handler(void) {
-
-	//disable interrupts and systick
-	disable_nvic();
-	disable_systick();
-
+	delay(1000);
 	gpio_led_toggle();
 
-	//clear any pending interrupts
-        EXTI_PR1 |= (1 << 13);
-
-	//enable interrupts
-        enable_nvic();
-
+        //clear any pending interrupts and re-enable interrupts
+        //EXTI_PR1 |= (1 << 13);
+        //enable_nvic();
 }

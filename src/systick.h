@@ -7,8 +7,11 @@
 #ifndef SYSTICK_H
 #define SYSTICK_H
 
-void systick_init(uint32_t ms);
+void systick_init(void);
 void enable_systick(void);
 void disable_systick(void);
+void SysTick_Handler(void);
+void clock_init(void);
+volatile uint32_t get_time(void);
 
 #endif
