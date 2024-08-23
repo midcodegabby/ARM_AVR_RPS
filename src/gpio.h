@@ -8,7 +8,7 @@
 #ifndef INC_GPIO_H_
 #define INC_GPIO_H_
 
-//void gpio_uart_init(void);
+void gpio_uart_init(void);
 void gpio_button_init(void);
 uint8_t gpio_button_poll(uint8_t);
 void gpio_led_init(void);

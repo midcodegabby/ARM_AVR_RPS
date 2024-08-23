@@ -28,13 +28,13 @@
 
 #define RCC_AHB2ENR (*((volatile uint32_t *) (0x40021000 + 0x4C)))
 
-/*
+
 void gpio_uart_init(void) {
-	//this function initializes the gpio port to be a uart port
+	//this function initializes the GPIO ports PA0 and PA1 to be UART4 TX and UART4 RX ports (respectively)  
 
 	//set GPIOA pin 0 and 1 to be alt. func. (UART)
-	GPIOA_MODER |= (0xA); //set 3rd and 1st bit
 	GPIOA_MODER &= ~(0x5); //clear 2nd and 0th bit
+	GPIOA_MODER |= (0xA); //set 3rd and 1st bit
 
 	//set output to reset (push-pull) state for PA0 and PA1
 	GPIOA_OTYPER &= ~(0x3); //clear 1st and 2nd bit
@@ -42,17 +42,15 @@ void gpio_uart_init(void) {
 	//set speed to low
 	GPIOA_OSPEEDR &= ~(0xF); //clear bits 3-0
 
-	//set PA0 to pull-down R (TX pin for UART)
-	//set PA1 to pull-up R (RX pin for UART)
-	GPIOA_PUPDR |= (0x6); //set 2nd and 1st bit
-	GPIOA_PUPDR &= ~(0x9); //clear 3rd and 0th bit
+	//set PA0 (TX) to pull-up R 
+	//set PA1 (RX) to pull-down R 
+	GPIOA_PUPDR |= (0x9); //set 3rd and 0th bit
 
 	//set PA0 and PA1 to be AF8 alt funcs
 	GPIOA_AFRL |= (0x88); //set 7th and 3rd bits
-	GPIOA_AFRL &= ~(0x77); //clear bits 6-4 and 2-0
 
 }
-*/
+
 void gpio_button_init(void) {
 
 	//set button pin (B1, connected to PC13) to be general purpose input mode

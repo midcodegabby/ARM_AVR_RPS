@@ -40,12 +40,12 @@ void systick_init(void) {
 }
 
 //enable systick
-void enable_systick(void) {
+void systick_enable(void) {
 	STK_CTRL |= (1);
 }
 
 //disable systick
-void disable_systick(void) {
+void systick_disable(void) {
 	STK_CTRL &= ~(1);
 }
 
@@ -53,13 +53,13 @@ void disable_systick(void) {
 void SysTick_Handler(void) {
 
         //disable interrupts
-        disable_nvic();
+        nvic_disable();
 
         //gpio_led_toggle();
 	time_ms++; 	//increment the clock time
 
         //enable interrupts
-        enable_nvic();
+        nvic_enable();
 }
 
 //initialize the clock
@@ -69,7 +69,7 @@ void clock_init(void) {
 	systick_init();
 
 	//enable the systick
-	enable_systick();
+	systick_enable();
 }
 
 //return the current time

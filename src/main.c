@@ -14,9 +14,14 @@
 #include "nvic.h"
 #include "exti.h"
 #include "systick.h"
+#include "uart.h"
 
 //semihosting init function:
 extern void initialize_monitor_handles(void);
+
+extern uint8_t opponent_hand; 
+volatile uint8_t my_hand = 0;
+volatile uint8_t gamephase = 0;
 
 int main(void) {
 
@@ -26,11 +31,16 @@ int main(void) {
 	peripheral_clk_init();
 	gpio_button_init();
 	gpio_led_init();
-	enable_exti();
-	enable_nvic();
-	change_priority_nvic();
+	gpio_uart_init();
+	uart_init();
+	exti_enable();
+	nvic_enable();
+	nvic_priority();
 
 	while (1){
+		uart_transmit(0xFF);
+		delay(1000);
+	
 	}
 
 	return 0;

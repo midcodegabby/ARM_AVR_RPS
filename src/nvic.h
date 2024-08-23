@@ -8,8 +8,8 @@
 #ifndef INC_NVIC_H_
 #define INC_NVIC_H_
 
-void enable_nvic(void);
-void disable_nvic(void);
-void change_priority_nvic(void);
+void nvic_enable(void);
+void nvic_disable(void);
+void nvic_priority(void);
 
 #endif 

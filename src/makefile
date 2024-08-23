@@ -9,9 +9,9 @@ LDFLAGS_SH= -mcpu=$(MACH) -mthumb -mfloat-abi=soft --specs=rdimon.specs -T stm32
 #  --specs=nano.specs allows for stdlib nano
 #  --specs=rdimon.specs allows for semihosting; LDFLAGS_SH is LDFLAGS for Semi Hosting!
 
-all: main.o gpio.o clock.o nvic.o exti.o systick.o sysmem.o syscalls.o stm32_startup.o final.elf 
+all: main.o gpio.o clock.o uart.o nvic.o exti.o systick.o sysmem.o syscalls.o stm32_startup.o final.elf 
 
-semi: main.o gpio.o clock.o nvic.o exti.o systick.o sysmem.o syscalls.o stm32_startup.o final_sh.elf
+semi: main.o gpio.o clock.o uart.o nvic.o exti.o systick.o sysmem.o syscalls.o stm32_startup.o final_sh.elf
 
 main.o:main.c
 	$(CC) $(CFLAGS) -o $@ $^
@@ -22,6 +22,9 @@ gpio.o:gpio.c
 clock.o:clock.c
 	$(CC) $(CFLAGS) -o $@ $^
 
+uart.o:uart.c
+	$(CC) $(CFLAGS) -o $@ $^
+	
 nvic.o:nvic.c
 	$(CC) $(CFLAGS) -o $@ $^
 
@@ -40,11 +43,11 @@ syscalls.o:syscalls.c
 stm32_startup.o:stm32_startup.c
 	$(CC) $(CFLAGS) -o $@ $^
 
-final.elf: main.o gpio.o clock.o nvic.o exti.o systick.o sysmem.o syscalls.o stm32_startup.o
+final.elf: main.o gpio.o clock.o uart.o nvic.o exti.o systick.o sysmem.o syscalls.o stm32_startup.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 # do not link syscalls.o with .elf file; stdlib does the syscalls!
-final_sh.elf: main.o gpio.o clock.o nvic.o exti.o systick.o stm32_startup.o
+final_sh.elf: main.o gpio.o clock.o uart.o nvic.o exti.o systick.o stm32_startup.o
 	$(CC) $(LDFLAGS_SH) -o $@ $^
 
 clean:

@@ -8,7 +8,7 @@
 #ifndef INC_EXTI_H_
 #define INC_EXTI_H_
 
-void enable_exti(void);
+void exti_enable(void);
 void EXTI15_10_IRQHandler(void);
 
 #endif 

@@ -14,6 +14,7 @@
 
 //define the base register value for the RCC portion of memory:
 #define RCC 0x40021000
+#define FLASH 0x40022000
 
 //define the first register in the RCC memory section
 //this method directly dereferences the memory itself to access the registers
@@ -25,8 +26,11 @@
 #define RCC_APB2ENR (*((volatile uint32_t *) (RCC + 0x60)))	//clk enable for peripherals
 #define RCC_CCIPR (*((volatile uint32_t *) (RCC + 0x88)))		//clk config for peripherals
 									
+#define FLASH_ACR (*((volatile uint32_t *) (FLASH)))		
+
 uint32_t SYS_CLK = 32;
 uint32_t AHB_CLK = 8;
+uint32_t APB1_CLK = 8;
 
 //delay a given amount of time using systick
 void delay(uint32_t ms) {
@@ -36,6 +40,9 @@ void delay(uint32_t ms) {
 
 void sysclk_init(void) {
 	//This function initializes the sysclk to work at 32 MHz, using the MSI clk
+	
+	//first change the FLASH to have 1 wait state
+	FLASH_ACR |= (1 << 0);
 
 	//select MSI range from RCC_CR register
 	RCC_CR |= (1 << 3);
@@ -44,10 +51,11 @@ void sysclk_init(void) {
 	RCC_CR &= ~(0xF << 4);
 	RCC_CR |= (0xA << 4);
 
-	//set AHB prescaler to be 4; this makes the AHB clock 8 MHz
+	//set AHB prescaler to be 4; this makes the AHB clock (HCLK) 8 MHz
 	RCC_CFGR |= (0x9 << 4);
-}
 
+	//APB1 prescaler is default 1; this makes APB1 clock 8 MHz
+}
 
 void peripheral_clk_init(void) {
 	//this function initializes the peripherals to have clocks
@@ -62,11 +70,9 @@ void peripheral_clk_init(void) {
 	RCC_APB2ENR |= (1 << 0);
 
 	//enable clk for UART4
-	//RCC_APB1ENR |= (1 << 19);
+	RCC_APB1ENR |= (1 << 19);
 
-	//select sysclk for UART4
-	//RCC_CCIPR |= (1 << 6);
-	//RCC_CCIPR &= ~(1 << 7);
+	//PCLK (APB1 CLK) is set as UART4 clock by default
 
 	delay(2);
 }

@@ -13,6 +13,7 @@
 #include "nvic.h"
 #include "gpio.h"
 #include "systick.h"
+#include "uart.h"
 
 #define EXTI 0x40010400
 #define SYSCFG 0x40010000
@@ -24,11 +25,16 @@
 #define EXTI_FTSR1 (*((volatile uint32_t *) (EXTI + 0x0C)))
 #define SYSCFG_EXTICR4 (*((volatile uint32_t *) (SYSCFG + 0x14)))
 
+extern uint8_t my_hand;
+
 //enable interrupts
-void enable_exti(void) {
+void exti_enable(void) {
 
         //enable interrupts for line 13, corresponding to the user button
         EXTI_IMR1 |= (1 << 13);
+
+        //enable interrupts for line 13, corresponding to UART4
+        //EXTI_IMR1 |= (1 << 13);
 
         //enable events for line 13
         //EXTI_EMR1 |= (1 << 13);
@@ -47,13 +53,13 @@ void enable_exti(void) {
 void EXTI15_10_IRQHandler(void) {
 	
 	//disable interrupts
-        disable_nvic(); 
+        nvic_disable(); 
 
-	delay(5000);	
+	//uart_transmit(0b11111111);
 	gpio_led_toggle();
 
         //clear any pending interrupts and re-enable interrupts
         EXTI_PR1 |= (1 << 13);
-        enable_nvic();
+	nvic_enable();
 }
 
