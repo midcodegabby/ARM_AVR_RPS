@@ -78,7 +78,7 @@ void EXTI15_10_IRQHandler(void) {
 		gamephase_incr();
 
 		//print out the next message
-		printf("READY. Waiting for the opponent\n\n");
+		printf("READY. Waiting for the opponent...\n\n");
 
 		//disable button inputs until gamephase is equal to 3
 		exti_disable(); 
@@ -93,7 +93,7 @@ void EXTI15_10_IRQHandler(void) {
 		gamephase_incr();
 		gamephase_incr();
 
-		printf("GAME START\n\n");
+		printf("GAME START!\n\n");
 	}
 
 	else if (gamephase == 3) {

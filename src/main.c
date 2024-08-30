@@ -78,7 +78,7 @@ int main(void) {
 		//send out start message
 		if (gamephase == 0){
 			printf("\nWelcome!\n");
-			printf("Please press User Button 1\n\n");
+			printf("Please press user button 1\n\n");
 			exti_enable();
 			my_hand = 0;
 			opponent_hand = 0;
@@ -103,6 +103,8 @@ int main(void) {
 
 			//disable button inputs
 			exti_disable(); 
+
+			printf("\n");
 
 			switch (opponent_hand) {
 				
@@ -141,27 +143,27 @@ int main(void) {
 
 			//rock beats scissors
 			if ((my_hand == 1) && (opponent_hand == 3)){
-				printf("You Won!\n\n");
+				printf("\nYou Won!\n\n");
 			}
 
 			//scissors loses to rock
 			else if ((my_hand == 3) && (opponent_hand == 1)){
-				printf("You Lost!\n\n");
+				printf("\nYou Lost!\n\n");
 			}
 
 			//all other cases are simple
 			else if (my_hand < opponent_hand){
-				printf("You Lost!\n\n");
+				printf("\nYou Lost!\n\n");
 			}
 
 			//all other cases are simple
 			else if (my_hand > opponent_hand){
-				printf("You Won!\n\n");
+				printf("\nYou Won!\n\n");
 			}
 
 			//case for draw
 			else if (my_hand == opponent_hand){
-				printf("Draw!\n\n");
+				printf("\nDraw!\n\n");
 			}
 
 			delay(7500);

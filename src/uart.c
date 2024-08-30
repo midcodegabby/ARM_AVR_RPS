@@ -59,7 +59,7 @@ void uart_transmit(volatile uint8_t data_out) {
 	//transmit the data
 	UART4_TDR |= data_out;
 	
-	printf("my_hand = %hhu\n", data_out);
+	//printf("my_hand = %hhu\n", data_out);
 
 	//keep looping until all data has been transmitted
 	while (!(UART4_ISR >> 6) & 1);
@@ -73,7 +73,7 @@ void UART4_IRQHandler(void) {
 
 	//assign the lowest byte of the RDR register to data_in
 	opponent_hand = UART4_RDR;
-	printf("opponent_hand = %hhu\n", opponent_hand);
+	//printf("opponent_hand = %hhu\n", opponent_hand);
 
 	//re-enable interrupts
 	nvic_enable();
