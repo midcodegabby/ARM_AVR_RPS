@@ -19,9 +19,41 @@
 //semihosting init function:
 extern void initialize_monitor_handles(void);
 
-volatile uint8_t my_hand;
+static volatile uint8_t my_hand;
 volatile uint8_t opponent_hand;
 volatile uint8_t gamephase;
+static uint8_t SendReady = 240;
+
+void change_hand(void) {
+	//this function allows for hand change
+        switch (my_hand) {
+        case 0:
+ 	       my_hand = 1;
+	       printf("Rock\n");
+               break;
+
+        case 1:
+               my_hand = 2;
+               printf("Paper\n");
+               break;
+
+        case 2:
+               my_hand = 3;
+               printf("Scissors\n");
+               break;
+
+        case 3:
+               my_hand = 1;
+               printf("Rock\n");
+               break;
+        }
+		
+}
+
+void gamephase_incr(void) {
+	//this function increments the gamephase variable
+	gamephase++;
+}
 
 int main(void) {
 
@@ -39,7 +71,6 @@ int main(void) {
 
 	//initialize variables
 	gamephase = 0;
-	uint8_t SendReady = 240;
 
 
 	while (1){
@@ -53,15 +84,15 @@ int main(void) {
 			opponent_hand = 0;
 			gamephase = 1;
 		}
-
-		//check if game has started
-		else if (gamephase == 3) {
-			gamephase = 4;
+		
+		else if ((gamephase == 2) && (opponent_hand == SendReady)) {
+			gamephase = 3;
 			printf("GAME START\n\n");
+			exti_enable();
 		}
 
 		//start delay if we are in the correct phase
-		else if (gamephase == 4) {
+		if (gamephase == 3) {
 			
 			//enable button inputs
 			exti_enable();
@@ -99,14 +130,14 @@ int main(void) {
 				break;
 			}
 
-			gamephase = 5;
+			gamephase = 4;
 
 			//do another delay: 
 			delay(7500);
 		}
 
 		//winning/losing screen
-		if (gamephase == 5) {
+		if (gamephase == 4) {
 
 			//rock beats scissors
 			if ((my_hand == 1) && (opponent_hand == 3)){

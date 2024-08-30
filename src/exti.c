@@ -14,6 +14,7 @@
 #include "gpio.h"
 #include "systick.h"
 #include "uart.h"
+#include "main.h"
 
 #define EXTI 0x40010400
 #define SYSCFG 0x40010000
@@ -25,10 +26,9 @@
 #define EXTI_FTSR1 (*((volatile uint32_t *) (EXTI + 0x0C)))
 #define SYSCFG_EXTICR4 (*((volatile uint32_t *) (SYSCFG + 0x14)))
 
-extern volatile uint8_t my_hand;
 extern volatile uint8_t gamephase;
 extern volatile uint8_t opponent_hand;
-volatile uint8_t SendReady = 240;
+static const uint8_t SendReady = 240;
 
 //enable interrupts
 void exti_init(void) {
@@ -70,54 +70,34 @@ void EXTI15_10_IRQHandler(void) {
 	
 	gpio_led_toggle();
 
-	//if the gamephase is 1 and no opponent signal, then send out the start signal:
-	if ((gamephase == 1) && (opponent_hand == 0)) {
+	//if the opponent has not sent the start signal, then we can send it ourselves
+	if ((gamephase == 1) && (opponent_hand != SendReady)) {
 		uart_transmit(SendReady);
 		
 		//change the gamephase
-		gamephase = 2;
-
-		//disable button inputs
-		exti_disable(); 
+		gamephase_incr();
 
 		//print out the next message
 		printf("READY. Waiting for the opponent\n\n");
-	}	
 
-	else if ((gamephase == 1) && (opponent_hand == SendReady)) {
+		//disable button inputs until gamephase is equal to 3
+		exti_disable(); 
+	}	
+	
+	//if the opponent has already sent the SendReady signal
+	//else if ((gamephase == 1) && (opponent_hand == SendReady)) {
+	else if (gamephase == 1) {
 		uart_transmit(SendReady);
 		
 		//change the gamephase
-		gamephase = 3;
+		gamephase_incr();
+		gamephase_incr();
 
-		//disable button inputs
-		exti_disable(); 
-
+		printf("GAME START\n\n");
 	}
 
-	//handle button inputs during hand selection
 	else if (gamephase == 3) {
-		switch (my_hand) {
-		 case 0:
-			my_hand = 1;
-			printf("Rock\n");
-			break;
-		
-		 case 1:
-			my_hand = 2;
-			printf("Paper\n");
-			break;
-
-		 case 2:
-			my_hand = 3;
-			printf("Scissors\n");
-			break;
-
-		 case 3:
-			my_hand = 1;
-			printf("Rock\n");
-			break;
-		}
+		change_hand();
 	}
 
 	

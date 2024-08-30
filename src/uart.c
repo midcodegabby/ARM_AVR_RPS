@@ -23,6 +23,7 @@
 #define UART4_TDR (*((volatile uint32_t *) (UART4 + 0x28)))
 
 extern volatile uint8_t opponent_hand;
+extern volatile uint8_t gamephase;
 
 //initialize the uart
 void uart_init(void){
@@ -72,6 +73,7 @@ void UART4_IRQHandler(void) {
 
 	//assign the lowest byte of the RDR register to data_in
 	opponent_hand = UART4_RDR;
+	printf("opponent_hand = %hhu\n", opponent_hand);
 
 	//re-enable interrupts
 	nvic_enable();
