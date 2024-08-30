@@ -1,7 +1,6 @@
 /*
  * Author: Gabriel Rodgers
  * Date: 8/20/2024
- * Purpose: Header file for systick configuration
 */
 
 #ifndef SYSTICK_H

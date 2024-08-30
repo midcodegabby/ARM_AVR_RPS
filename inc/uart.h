@@ -2,7 +2,7 @@
  * uart.h
  *
  *  Created on: August 22, 2024
- *      Author: Gabriel Rodgers
+ *  Author: Gabriel Rodgers
  */
 
 #ifndef INC_UART_H_

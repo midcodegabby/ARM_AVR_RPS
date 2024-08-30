@@ -2,7 +2,7 @@
  * gpio.h
  *
  *  Created on: May 29, 2024
- *      Author: Gabriel Rodgers
+ *  Author: Gabriel Rodgers
  */
 
 #ifndef INC_GPIO_H_

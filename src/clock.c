@@ -1,7 +1,7 @@
 /*
  * Author: Gabriel Rodgers
  * Date: 5/15/2024
- * Purpose: configure sysclock within the STM32L476RG MCU
+ * Purpose: configure sysclock, peripherals, and delay fn within the STM32L476RG MCU
  */
 
 //include files
@@ -10,7 +10,6 @@
 
 #include "clock.h"
 #include "systick.h"
-
 
 //define the base register value for the RCC portion of memory:
 #define RCC 0x40021000
@@ -38,10 +37,6 @@ void delay(uint32_t ms) {
 	while ((start + ms) > get_time()); 
 }
 
-//this function delays a given amount of time using systick, but also flashes the LED with the
-//following format: there is 1 led toggle per 1 second of time remaining
-
-
 void sysclk_init(void) {
 	//This function initializes the sysclk to work at 32 MHz, using the MSI clk
 	
@@ -63,6 +58,7 @@ void sysclk_init(void) {
 
 void peripheral_clk_init(void) {
 	//this function initializes the peripherals to have clocks
+	//it initializes GPIOA, GPIOC, SYSCFG, and UART4
 
 	//enable clk for peripherals (GPIO Port A)
 	RCC_AHB2ENR |= (1 << 0);

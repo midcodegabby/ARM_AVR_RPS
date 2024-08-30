@@ -3,7 +3,7 @@
  *
  *  Created on: August 15, 2024
  *  Author: Gabriel Rodgers
- *  Purpose: to enable interrupts and handle IRQs
+ *  Purpose: to enable interrupts and handle some IRQs
  */
 
 #include <stdint.h>
@@ -26,21 +26,13 @@
 #define EXTI_FTSR1 (*((volatile uint32_t *) (EXTI + 0x0C)))
 #define SYSCFG_EXTICR4 (*((volatile uint32_t *) (SYSCFG + 0x14)))
 
+//globals
 extern volatile uint8_t gamephase;
 extern volatile uint8_t opponent_hand;
 static const uint8_t SendReady = 240;
 
 //enable interrupts
 void exti_init(void) {
-
-        //enable interrupts for line 13, corresponding to the user button
-        //EXTI_IMR1 |= (1 << 13);
-
-        //enable interrupts for line 13, corresponding to UART4
-        //EXTI_IMR1 |= (1 << 13);
-
-        //enable events for line 13
-        //EXTI_EMR1 |= (1 << 13);
 
         //enable falling edge trigger for line 13
         EXTI_FTSR1 |= (1 << 13);
@@ -85,7 +77,6 @@ void EXTI15_10_IRQHandler(void) {
 	}	
 	
 	//if the opponent has already sent the SendReady signal
-	//else if ((gamephase == 1) && (opponent_hand == SendReady)) {
 	else if (gamephase == 1) {
 		uart_transmit(SendReady);
 		
@@ -101,8 +92,6 @@ void EXTI15_10_IRQHandler(void) {
 	}
 
 	
-	//button input does nothing during phase 1 and 3
-
         //clear any pending interrupts and re-enable interrupts
         EXTI_PR1 |= (1 << 13);
 	nvic_enable();

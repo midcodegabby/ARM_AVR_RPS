@@ -2,7 +2,7 @@
  * nvic.h
  *
  *  Created on: August 15, 2024
- *      Author: Gabriel Rodgers
+ *  Author: Gabriel Rodgers
  */
 
 #ifndef INC_NVIC_H_

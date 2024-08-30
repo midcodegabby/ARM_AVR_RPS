@@ -3,12 +3,13 @@
  *
  *  Created on: August 15, 2024
  *  Author: Gabriel Rodgers
- *  Purpose: To enable interrupts through the NVIC
+ *  Purpose: To control interrupts through the NVIC;
+ *  this file only effects interrupts 40 and 52, corresponding to user button and UART4 interrupt. 
  */
+
 
 #include <stdint.h>
 #include "nvic.h"
-
 
 #define NVIC_ISER 0xE000E100
 #define NVIC_ICER 0xE000E180
@@ -36,7 +37,8 @@ void nvic_priority(void) {
 	//change priority of button interrupt (40) to lowest
 	NVIC_IPR10 |= (0xF << 4); 
 
-	//change priority of UART4 interrupt (52) to second highest
+	//this changes priority of UART4 interrupt (52) to second highest; by default
+	//it is at the highest priority
 	//NVIC_IPR13 |= (1 << 4); 
 }
 

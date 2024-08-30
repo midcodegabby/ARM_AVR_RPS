@@ -3,7 +3,7 @@
  *
  *  Created on: May 29, 2024
  *  Author: Gabriel Rodgers
- *  Purpose: run the main code?
+ *  Purpose: Handle most Rock Paper Scissors logic
  */
 
 #include <stdint.h>
@@ -19,6 +19,7 @@
 //semihosting init function:
 extern void initialize_monitor_handles(void);
 
+//globals
 static volatile uint8_t my_hand;
 volatile uint8_t opponent_hand;
 volatile uint8_t gamephase;
@@ -72,7 +73,6 @@ int main(void) {
 	//initialize variables
 	gamephase = 0;
 
-
 	while (1){
 
 		//send out start message
@@ -85,6 +85,7 @@ int main(void) {
 			gamephase = 1;
 		}
 		
+		//message for when ARM mcu sends SendReady signal first
 		else if ((gamephase == 2) && (opponent_hand == SendReady)) {
 			gamephase = 3;
 			printf("GAME START\n\n");
@@ -96,6 +97,7 @@ int main(void) {
 			
 			//enable button inputs
 			exti_enable();
+
 			delay(7500); //delay for 7.5s
 				     
 			//at this point it is time to end the game!

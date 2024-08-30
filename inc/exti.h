@@ -2,7 +2,7 @@
  * exti.h
  *
  *  Created on: August 15, 2024
- *      Author: Gabriel Rodgers
+ *  Author: Gabriel Rodgers
  */
 
 #ifndef INC_EXTI_H_

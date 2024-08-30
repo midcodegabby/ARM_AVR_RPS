@@ -2,7 +2,7 @@
  * main.h
  *
  *  Created on: August 29, 2024
- *      Author: Gabriel Rodgers
+ *  Author: Gabriel Rodgers
  */
 
 #ifndef INC_MAIN_H_
