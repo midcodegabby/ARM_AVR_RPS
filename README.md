@@ -9,7 +9,7 @@ I used the ARM GNU toolchain for compilation and linking, OpenOCD for programmin
 all code writing. 
 
 I followed this playlist to help me with this project:
-youtube.com
+youtube.com](https://www.youtube.com/playlist?list=PLERTijJOmYrDiiWd10iRHY0VRHdJwUH4g
 
 This is the link to a Youtube video showing the project in action:
 https://youtu.be/cP5Dmpc3x68
