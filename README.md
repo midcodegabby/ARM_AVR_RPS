@@ -8,11 +8,11 @@ This project primarily focuses on creating custom drivers such as UART, Systick,
 I used the ARM GNU toolchain for compilation and linking, OpenOCD for programming and debugging, and the linux terminal for 
 all code writing. 
 
-I followed this playlist to help me with this project:
-https://www.youtube.com/playlist?list=PLERTijJOmYrDiiWd10iRHY0VRHdJwUH4g
-
 This is the link to a Youtube video showing the project in action:
 https://youtu.be/cP5Dmpc3x68
+
+I followed this playlist to help me with this project:
+https://www.youtube.com/playlist?list=PLERTijJOmYrDiiWd10iRHY0VRHdJwUH4g
 
 Setbacks:
 I initially planned to only write code for the STM32, since I had already verified in my Computer Organization class
