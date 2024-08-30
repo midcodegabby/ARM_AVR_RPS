@@ -37,6 +37,6 @@ void nvic_priority(void) {
 	NVIC_IPR10 |= (0xF << 4); 
 
 	//change priority of UART4 interrupt (52) to second highest
-	NVIC_IPR13 |= (1 << 4); 
+	//NVIC_IPR13 |= (1 << 4); 
 }
 

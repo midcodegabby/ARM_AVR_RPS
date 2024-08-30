@@ -38,6 +38,10 @@ void delay(uint32_t ms) {
 	while ((start + ms) > get_time()); 
 }
 
+//this function delays a given amount of time using systick, but also flashes the LED with the
+//following format: there is 1 led toggle per 1 second of time remaining
+
+
 void sysclk_init(void) {
 	//This function initializes the sysclk to work at 32 MHz, using the MSI clk
 	

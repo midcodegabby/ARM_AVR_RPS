@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "uart.h"
+#include "nvic.h"
 
 #define USART1 0x40013800
 #define UART4 0x40004C00
@@ -21,8 +22,7 @@
 #define UART4_RDR (*((volatile uint32_t *) (UART4 + 0x24)))
 #define UART4_TDR (*((volatile uint32_t *) (UART4 + 0x28)))
 
-volatile uint8_t opponent_hand = 0; 
-extern volatile uint8_t gamephase; 
+extern volatile uint8_t opponent_hand;
 
 //initialize the uart
 void uart_init(void){
@@ -53,10 +53,12 @@ void uart_init(void){
 }
 
 //this function transmits a given word
-void uart_transmit(uint8_t data_out) {
+void uart_transmit(volatile uint8_t data_out) {
 	
 	//transmit the data
 	UART4_TDR |= data_out;
+	
+	printf("my_hand = %hhu\n", data_out);
 
 	//keep looping until all data has been transmitted
 	while (!(UART4_ISR >> 6) & 1);
@@ -65,11 +67,14 @@ void uart_transmit(uint8_t data_out) {
 //this IRQ handler receives a word and sets the global variable "opponent_hand" to the word
 void UART4_IRQHandler(void) {
 	
+	//disable interrupts
+	nvic_disable();
+
 	//assign the lowest byte of the RDR register to data_in
 	opponent_hand = UART4_RDR;
 
-	//print the opponent's hand
-	printf("opponent_hand = %hhu\n", opponent_hand);
+	//re-enable interrupts
+	nvic_enable();
 }
 
 
