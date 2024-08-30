@@ -1,6 +1,6 @@
 This is a project I completed to learn more about baremetal embedded development in a Linux environment. This   
 project is a continuation of a project I completed in my Computer Organization class, with the goal to get  
-an Nucleo-64 board (STM32L476xxx mcu) to play a game of Rock Paper Scissors with the ATmega32U4 mcu board  
+a Nucleo-64 board (STM32L476xxx mcu) to play a game of Rock Paper Scissors with the ATmega32U4 mcu board  
 that I used in that class via UART.     
 
 This project primarily focuses on creating custom drivers such as UART, Systick, GPIO, etc. for the Nucleo-64 board.   
