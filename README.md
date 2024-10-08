@@ -13,8 +13,3 @@ https://youtu.be/cP5Dmpc3x68
 
 I followed this playlist to help me with this project:   
 https://www.youtube.com/playlist?list=PLERTijJOmYrDiiWd10iRHY0VRHdJwUH4g  
-
-Setbacks:  
-I initially planned to only write code for the STM32, since I had already verified in my Computer Organization class
-that the Rock Paper Scissors game already worked for two ATmega32U4 microcontrollers. However, disaster struck when 
-I realized that the ATmega32U4 mcu that I was using from that class had gotten its interrupt controller (and possibly some other components) fried at some point after completing the class. I did not want to buy a new board, so I just rewrote the ATmega32U4 code to work via polling, entirely removing any interrupts from the code. While this solution was pretty jank, I still got both sides to work, so I would count that as a win. You can see this code in the avr_files folder.   
