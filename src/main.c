@@ -16,14 +16,22 @@
 #include "systick.h"
 #include "uart.h"
 
+//define some registers for ISRs
+#define EXTI 0x40010400
+#define UART4 0x40004C00
+
+#define EXTI_PR1 (*((volatile uint32_t *) (EXTI + 0x14)))
+#define UART4_RDR (*((volatile uint32_t *) (UART4 + 0x24)))
+
+#define SendReady 0xFF
+
 //semihosting init function:
 extern void initialize_monitor_handles(void);
 
-//globals
-static volatile uint8_t my_hand;
-volatile uint8_t opponent_hand;
-volatile uint8_t gamephase;
-static uint8_t SendReady = 240;
+//static vars
+static uint8_t gamephase = -1;
+volatile uint8_t my_hand = 0;
+static uint8_t opponent_hand = 0;
 
 void change_hand(void) {
 	//this function allows for hand change
@@ -48,13 +56,70 @@ void change_hand(void) {
                printf("Rock\n");
                break;
         }
-		
 }
 
 void gamephase_incr(void) {
 	//this function increments the gamephase variable
 	gamephase++;
 }
+
+//this IRQ handler receives a word and sets the global variable "opponent_hand" to the word
+void UART4_IRQHandler(void) {
+
+        //disable interrupts
+        nvic_disable();
+
+        //assign the lowest byte of the RDR register to data_in
+        opponent_hand = UART4_RDR;
+
+        //re-enable interrupts
+        nvic_enable();
+}
+
+//IRQ handler for button push interrupt; this either starts the game or changes the hand
+void EXTI15_10_IRQHandler(void) {
+
+        //disable interrupts
+        nvic_disable();
+
+        gpio_led_toggle();
+
+        //if the opponent has not sent the start signal, then we can send it ourselves
+        if ((gamephase == 1) && (opponent_hand != SendReady)) {
+                uart_transmit(SendReady);
+
+                //change the gamephase
+                gamephase_incr();
+
+                //print out the next message
+                printf("READY. Waiting for the opponent...\n\n");
+
+                //disable button inputs until gamephase is equal to 2
+                exti_disable();
+        }
+
+        //if the opponent has already sent the SendReady signal
+        else if ((gamephase == 1) && (opponent_hand == SendReady)) {
+                uart_transmit(SendReady);
+
+                //change the gamephase
+                gamephase_incr();
+                gamephase_incr();
+
+                printf("GAME START!\n\n");
+        }
+
+        else if (gamephase == 3) {
+                change_hand();
+        }
+
+
+        //clear any pending interrupts and re-enable interrupts
+        EXTI_PR1 |= (1 << 13);
+        nvic_enable();
+}
+
+
 
 int main(void) {
 

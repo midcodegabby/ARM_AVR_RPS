@@ -26,11 +26,6 @@
 #define EXTI_FTSR1 (*((volatile uint32_t *) (EXTI + 0x0C)))
 #define SYSCFG_EXTICR4 (*((volatile uint32_t *) (SYSCFG + 0x14)))
 
-//globals
-extern volatile uint8_t gamephase;
-extern volatile uint8_t opponent_hand;
-static const uint8_t SendReady = 240;
-
 //enable interrupts
 void exti_init(void) {
 
@@ -52,48 +47,5 @@ void exti_enable(void) {
 void exti_disable(void) {
         //disable interrupts for line 13, corresponding to the user button
         EXTI_IMR1 &= ~(1 << 13);
-}
-
-//IRQ handler for button push interrupt; this either starts the game or changes the hand
-void EXTI15_10_IRQHandler(void) {
-	
-	//disable interrupts
-        nvic_disable(); 
-	
-	gpio_led_toggle();
-
-	//if the opponent has not sent the start signal, then we can send it ourselves
-	if ((gamephase == 1) && (opponent_hand != SendReady)) {
-		uart_transmit(SendReady);
-		
-		//change the gamephase
-		gamephase_incr();
-
-		//print out the next message
-		printf("READY. Waiting for the opponent...\n\n");
-
-		//disable button inputs until gamephase is equal to 3
-		exti_disable(); 
-	}	
-	
-	//if the opponent has already sent the SendReady signal
-	else if (gamephase == 1) {
-		uart_transmit(SendReady);
-		
-		//change the gamephase
-		gamephase_incr();
-		gamephase_incr();
-
-		printf("GAME START!\n\n");
-	}
-
-	else if (gamephase == 3) {
-		change_hand();
-	}
-
-	
-        //clear any pending interrupts and re-enable interrupts
-        EXTI_PR1 |= (1 << 13);
-	nvic_enable();
 }
 

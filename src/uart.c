@@ -22,9 +22,6 @@
 #define UART4_RDR (*((volatile uint32_t *) (UART4 + 0x24)))
 #define UART4_TDR (*((volatile uint32_t *) (UART4 + 0x28)))
 
-extern volatile uint8_t opponent_hand;
-extern volatile uint8_t gamephase;
-
 //initialize the uart
 void uart_init(void){
 	//oversampling = 8; parity is disabled by default so will keep that way
@@ -57,26 +54,11 @@ void uart_init(void){
 void uart_transmit(volatile uint8_t data_out) {
 	
 	//transmit the data
-	UART4_TDR |= data_out;
+	UART4_TDR = data_out;
 	
 	//keep looping until all data has been transmitted
 	while (!(UART4_ISR >> 6) & 1);
 }
-
-//this IRQ handler receives a word and sets the global variable "opponent_hand" to the word
-void UART4_IRQHandler(void) {
-	
-	//disable interrupts
-	nvic_disable();
-
-	//assign the lowest byte of the RDR register to data_in
-	opponent_hand = UART4_RDR;
-
-	//re-enable interrupts
-	nvic_enable();
-}
-
-
 
 
 
